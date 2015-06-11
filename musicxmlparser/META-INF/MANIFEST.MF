@@ -1,0 +1,31 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Created-By: 1.6.0_65 (Apple Inc.)
+Built-By: jhy
+Build-Jdk: 1.6.0_65
+Export-Package: org.jsoup;uses:="org.jsoup.parser,org.jsoup.nodes,org.
+ jsoup.helper,org.jsoup.safety";version="1.8.1",org.jsoup.examples;use
+ s:="org.jsoup.select,org.jsoup.nodes,org.jsoup.helper,org.jsoup";vers
+ ion="1.8.1",org.jsoup.helper;uses:="org.jsoup.parser,org.jsoup.select
+ ,org.jsoup.nodes,org.jsoup";version="1.8.1",org.jsoup.nodes;uses:="or
+ g.jsoup.helper,org.jsoup.parser,org.jsoup.select,org.jsoup";version="
+ 1.8.1",org.jsoup.parser;uses:="org.jsoup.helper,org.jsoup.select,org.
+ jsoup.nodes";version="1.8.1",org.jsoup.safety;uses:="org.jsoup.nodes,
+ org.jsoup.select,org.jsoup.parser,org.jsoup.helper";version="1.8.1",o
+ rg.jsoup.select;uses:="org.jsoup.nodes,org.jsoup.helper,org.jsoup.par
+ ser";version="1.8.1"
+Tool: Bnd-0.0.357
+Bundle-Name: jsoup
+Bundle-Vendor: Jonathan Hedley
+Bundle-Version: 1.8.1
+Bnd-LastModified: 1411877202254
+Bundle-ManifestVersion: 2
+Bundle-License: http://jsoup.com/license
+Bundle-Description: jsoup HTML parser
+Import-Package: org.jsoup;version="1.8",org.jsoup.examples;version="1.
+ 8",org.jsoup.helper;version="1.8",org.jsoup.nodes;version="1.8",org.j
+ soup.parser;version="1.8",org.jsoup.safety;version="1.8",org.jsoup.se
+ lect;version="1.8"
+Bundle-SymbolicName: org.jsoup
+Bundle-DocURL: http://jsoup.org/
+
