@@ -6,7 +6,7 @@ import numpy
 
 
 
-#test = fingerprinter.Fingerprinter(filepath="tmp/11k16bitpcm.wav")
+#test = fingerprinter.Fingerprinter(filepath="tmp/blues.wav")
 #test = fingerprinter.Fingerprinter(filepath="tmp/440Hz_44100Hz_16bit_30sec.wav", framewidth=0.37)
 #test.init_fingerprints()
 
@@ -15,7 +15,7 @@ import numpy
 
 print "done"
 
-test2 = Fingerprinter(filepath="/Users/SRJN/Desktop/Desktop/audiofingerprint-master/fingerprinter/test/data/11k16bitpcm.wav", framewidth=0.37, overlap=0.1)
+test2 = Fingerprinter(filepath="/Users/SRJN/Documents/musicvisualization/srijan afs/test/data/blues.00000.wav", framewidth=0.37, overlap=0.1)
 test2.init_fingerprints()
 test2.print_info()
 

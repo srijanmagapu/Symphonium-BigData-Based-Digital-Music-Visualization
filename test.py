@@ -5,7 +5,7 @@ import wave
 
 
 # 'rb' is binary reading modes. otherweise EOL chars corrupt on windows
-wavefile = wave.open("/Users/SRJN/Documents/musicvisualization/srijan afs/test/data", 'rb')
+wavefile = wave.open("/Users/SRJN/Documents/musicvisualization/srijan afs/test/data/11k16bitpcm.wav", 'rb')
 
 channels = wavefile.getnchannels()
 sampwidth = wavefile.getsampwidth()
