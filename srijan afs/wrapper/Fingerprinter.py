@@ -18,33 +18,41 @@ class Fingerprinter(object):
     FINGERPRINT_NBITS = 32              # number of bits for the fingerprint of a frame
     
     # raw properties (given by the user)
-    wavefile = None                
-    framewidth = None              
-    overlap = None                 
+    wavefile = None                # the wave file to analyse
+    framewidth = None              # width of the frames in seconds
+    overlap = None                 # how much do the frames overlap? < 1.0
     
     # derived properties
-    nsamples = None                
-    nsamples_per_frame = None
-    nframes = None                 
-    samples_rate = None            
-    sample_width = None            
-    resolution = None              
-    nsamples_between_frames = None 
+    nsamples = None                # number of samples in file
+    nsamples_per_frame = None      # Number of samples per frame
+    nframes = None                 # number of frames in the whole file
+    samples_rate = None            # number of samples per second
+    sample_width = None            # bytes per sample
+    resolution = None              # resolution of the frames in seconds, i.e. for every <resolution> seconds there is one sub-fingerprint
+    nsamples_between_frames = None # How many samples are there between the first sample two neighboring frames
     frequency_band_boundary_indices = numpy.zeros(FINGERPRINT_NBITS) # Boundaries of the frequency bands used for fingerprint generation
 
+    # properties that are not relevant for calculating anything but might be interesting
     index_width_lower_to_upper = None # how many fourier components lie within 300Hz..2000Hz
     
     # arrays that contain all the sub-fingerprints of the wave file
     fingerprints = None
     fingerprints_binary = None
-        def __init__(self, filepath=None, framewidth=0.37, overlap=31.0/32.0):
+    
+    # Initialize the wrapper with a wave file and appropriate settings.
+    # The framewidth can be given in seconds instead of samples (easier for humans to calculate)
+    # The overlap is element [0,1) and describes how much two frames overlap
+    # lower overlap gives better resolution but more redundancy in the fingerprints
+    def __init__(self, filepath=None, framewidth=0.37, overlap=31.0/32.0):
         self.wavefile = wave.open(filepath, 'rb')
         self.framewidth = framewidth
         self.overlap = overlap
         
-        n_channels = self.wavefile.getnchannels()        
-        self.sample_width = self.wavefile.getsampwidth()
-        self.nsamples = self.wavefile.getnframes()       ]
+        # extract info from wave file. note that the terminology of this code
+        # and that of the python standard lib are not the same!
+        n_channels = self.wavefile.getnchannels()        # how many channels?
+        self.sample_width = self.wavefile.getsampwidth() # how many bytes per sample?
+        self.nsamples = self.wavefile.getnframes()       # how many samples in total?
         self.sample_rate = self.wavefile.getframerate()  # how many samples per second?
 
         length_in_seconds = self.nsamples / self.sample_rate # length of the whole track
@@ -129,14 +137,45 @@ class Fingerprinter(object):
     
     
     
-     
+    ########################
+    def print_info(self):
+        """
+        Prints some info about the file this Wrapper wraps and the wrapper itself.
+        """
+        print " * * * * * * * "
+        print "Width of frames in seconds: " + str(self.framewidth)
+        print "Overlap between frames: " + str(self.overlap)
+        print "# of samples per frame: " + str(self.nsamples_per_frame)
+        print "# of samples between beginning of adjacent frames: " + str(self.nsamples_between_frames)
+        print " -> Resolution approx. " + str(self.resolution)
+        print "# of fourier components between 300 and 2000 Hz: " + str(self.index_width_lower_to_upper)
+        print " * * * * * * * "
+        
+    
+        
+    ##############################
+    def calculate_frequency_bands(self, nsamples_per_frame, frame_length):
+        # Since the paper cited above does not give the explicit spacing, we are forced to chose our own spacing.
+        # Since apparently humans perceive loudness on a log scale, we use frequency bands that grow exponentially
+        # in frequency to have an even "loudness" distribution in the bands
+        
+        # index of a frequency component in the FFT array =   length_of_frame_in_seconds * frequency
+        # length of fft array : even n/2 + 1       odd (n+1)/2
+        
+        # length of fft array.
+        if( nsamples_per_frame % 2 == 0): 
+            nsamples_fft = 1 + nsamples_per_frame/2
+        else:
+            nsamples_fft = (nsamples_per_frame + 1)/2
         
         index_lower_limit = int(math.floor( frame_length * self.FREQUENCY_BAND_LOWER_LIMIT )) # index of 300Hz freq component
         index_upper_limit = int(math.ceil( frame_length * self.FREQUENCY_BAND_UPPER_LIMIT )) # index of 2000Hz freq component
         index_width = index_upper_limit - index_lower_limit + 1 # how many entries lie within 300Hz..2000Hz
         self.index_width_lower_to_upper = index_width
         
-
+        # we must partition index_width into 33 subsets of width proportional to the exp() of the frequency they lie next to
+        # we use f(n) = a + exp(b * n) where n is element [0,33] and f(0) == index_lower_limit, f(33) = index_upper_limit
+        # a and b given here solve these equations
         a = float(index_lower_limit)
         b = numpy.log( float(index_upper_limit)/a ) / float(self.FINGERPRINT_NBITS + 1)
         # return indices for the frequency bands
@@ -185,7 +224,12 @@ class Fingerprinter(object):
         return block_dist
         
         
-         if block_length > 256:
+        
+    # Find the best match between this fingerprinter and a given fingerprinter
+    def find_position(self, fingerprinted):
+        compare = fingerprinted.fingerprints_binary
+        block_length = len(compare)
+        if block_length > 256:
             block_length = 256
         
         min = 10000000000
@@ -197,4 +241,5 @@ class Fingerprinter(object):
                 index = i
                 min = diff
                 
+        print index # index of frame with lowest block distance
         print float(index) * self.nsamples_between_frames / self.sample_rate
