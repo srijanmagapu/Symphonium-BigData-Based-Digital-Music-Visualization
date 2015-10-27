@@ -19,6 +19,14 @@ def readWav():
   
     # Get parameters of the sound wave.
     nframes = sound_wave.getnframes()
+    framerate = sound_wave.getframerate()
+    params = sound_wave.getparams()
+    duration = nframes / float(framerate)
+
+    print "frame rate: %d " % (framerate,)
+    print "nframes: %d" % (nframes,)
+    print "duration: %f seconds" % (duration,)
+    print scipy.array(sound_wave)
 
     return (sound_wave, nframes, framerate, duration, params)
 

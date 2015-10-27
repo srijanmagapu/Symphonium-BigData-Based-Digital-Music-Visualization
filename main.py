@@ -21,6 +21,11 @@ def generate_random_name(extension):
     return random_name + '.' + extension
 
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+
 @app.route('/', methods=['GET', 'POST'])
 def main():
     if request.method == 'POST':
@@ -35,7 +40,7 @@ def main():
 
 @app.route('/<filename>')
 def display_sheet_notes(filename):
-    return render_template('',
+    return render_template('display_sheet_notes.html',
                            filename=filename)
 
 

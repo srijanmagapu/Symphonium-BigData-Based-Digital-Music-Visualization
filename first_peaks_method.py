@@ -25,6 +25,8 @@ def readWav():
 
     print "frame rate: %d " % (framerate,)
     print "nframes: %d" % (nframes,)
+    print "duration: %f seconds" % (duration,)
+    print scipy.array(sound_wave)
 
     return (sound_wave, nframes, framerate, duration, params)
 
@@ -33,6 +35,11 @@ def getDuration(sound_file):
     """
         Returns the duration of a given sound file.
     """
+
+    wr = wave.open(sound_file, 'r')
+    nchannels, sampwidth, framerate, nframes, comptype, compname =  wr.getparams()
+    return nframes / float(framerate)
+
 
 def getFrameRate(sound_file):
     """
