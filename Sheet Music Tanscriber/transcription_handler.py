@@ -2,8 +2,8 @@ from music_transcriber import MusicTranscriber
 import os
 import time
 
-MUSIC_FILES_DIR = '/Users/SRJN/Desktop/Automated_Music_Transcription-master'
-LILYPOND_DIR = '/Users/SRJN/Desktop/Automated_Music_Transcription-master'
+MUSIC_FILES_DIR = '/tmp/music_files'
+LILYPOND_DIR = '/tmp/lilypond_files'
 SHEET_NOTES_DIR = '/var/www/transcriber_website/static/sheet_notes'
 MIDI_DIR = '/var/www/transcriber_website/static/midi_files'
 ONSET_FRAMES_DIR = '/var/www/transcriber_website/frames'

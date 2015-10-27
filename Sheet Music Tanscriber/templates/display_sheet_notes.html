@@ -7,13 +7,14 @@
         <div class="col-md-5">
             <audio controls="controls">
               Your browser does not support the <code>audio</code> element.
-              <source src="static/midi_files/{{filename}}.wav" type="audio/wav">
+              <source src="7mjxbwil.wav" type="audio/wav">
             </audio>
         </div>
-        <div class="col-md-1"></div>
+        <div class="col-md-1">
+        </div>
     </div>
-</div>
-<object data="static/sheet_notes/{{filename}}.pdf" type="application/pdf" width="1000" height="1200">
-  alt : <a href="static/sheet_notes/{{filename}}.pdf"></a>
+    <object data="{{pdfFile}}" type="application/text" width="1000" height="1200">
+  alt : <a href="/static/sheet_notes/{{filename}}">{{filename}}</a>
 </object>
+</div>
 {% endblock %}
